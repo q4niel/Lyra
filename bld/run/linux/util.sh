@@ -14,6 +14,6 @@ runPy() {
         source bld/venv/bin/activate
     fi
 
-    python3 $1
+    python3 -B $1
     deactivate
 }
