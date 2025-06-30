@@ -4,5 +4,11 @@
 !LICENSE
 !README.md
 
+!bld/
+!bld/run/
+!bld/run/**/*
+!bld/src/
+!bld/src/**/*
+
 !stp/
 !stp/**/*
