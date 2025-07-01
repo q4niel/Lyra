@@ -1,6 +1,6 @@
-#include "hello/hello.hxx"
+#include <print>
 
 int main(int argc, char **argv) {
-    hello();
+    std::println("hello world");
     return 0;
 }

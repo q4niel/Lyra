@@ -23,5 +23,11 @@ if __name__ == "__main__":
     version: dict = lua.parseFile("bld/cfg/version.lua")
     sources: list = lua.parseFile("bld/cfg/sources.lua")
 
-    for src in sources:
-        clang.compile(src, objDir, flags["Compilation"])
+    clang.build (
+        "lyra",
+        objDir,
+        sources,
+        objDir,
+        flags["Compilation"],
+        flags["Linking"]
+    )
