@@ -5,10 +5,15 @@
 !README.md
 
 !bld/
+!bld/cfg/
+!bld/cfg/**/*
 !bld/run/
 !bld/run/**/*
 !bld/src/
 !bld/src/**/*
+
+!src/
+!src/**/*
 
 !stp/
 !stp/**/*
