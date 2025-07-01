@@ -1,3 +1,6 @@
 return {
-    "-std=c++23"
+    Compilation = {
+        "-std=c++23"
+    },
+    Linking = {}
 }

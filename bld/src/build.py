@@ -6,7 +6,7 @@ from util import clang
 if __name__ == "__main__":
     outDir: str = "bld/out"
     buildDir: str = f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}"
-    cacheDir: str = f"{buildDir}/cache"
+    objDir: str = f"{buildDir}/obj"
 
     if not os.path.exists(outDir):
         os.mkdir(outDir)
@@ -17,11 +17,11 @@ if __name__ == "__main__":
             break
 
     os.mkdir(buildDir)
-    os.mkdir(cacheDir)
+    os.mkdir(objDir)
 
-    flags: list = lua.parseList("bld/cfg/flags.lua")
-    version: dict = lua.parseDict("bld/cfg/version.lua")
-    sources: list = lua.parseList("bld/cfg/sources.lua")
+    flags: dict = lua.parseFile("bld/cfg/flags.lua")
+    version: dict = lua.parseFile("bld/cfg/version.lua")
+    sources: list = lua.parseFile("bld/cfg/sources.lua")
 
     for src in sources:
-        clang.compile(src, cacheDir, flags)
+        clang.compile(src, objDir, flags["Compilation"])
