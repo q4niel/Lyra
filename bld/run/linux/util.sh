@@ -10,6 +10,7 @@ runPy() {
         python3 -m venv bld/venv
         source bld/venv/bin/activate
         pip install lupa
+        pip install requests
     else
         source bld/venv/bin/activate
     fi
