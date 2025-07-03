@@ -7,6 +7,7 @@ if __name__ == "__main__":
     outDir: str = "bld/out"
     buildDir: str = f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}"
     objDir: str = f"{buildDir}/obj"
+    binDir: str = f"{buildDir}/bin"
 
     if not os.path.exists(outDir):
         os.mkdir(outDir)
@@ -18,6 +19,7 @@ if __name__ == "__main__":
 
     os.mkdir(buildDir)
     os.mkdir(objDir)
+    os.mkdir(binDir)
 
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
     version: dict = lua.parseFile("bld/cfg/version.lua")
@@ -25,11 +27,11 @@ if __name__ == "__main__":
     sources: list = lua.parseFile("bld/cfg/sources.lua")
 
     clang.build (
-        "lyra",
         objDir,
+        binDir,
+        "lyra",
         libraries["Linux"],
         sources,
-        objDir,
         flags["Compilation"],
         flags["Linking"]
     )

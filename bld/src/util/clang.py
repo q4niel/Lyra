@@ -1,9 +1,18 @@
 import os
+import shutil
 
 def _join(strings: list[str]) -> str:
     return " ".join(f"{s}" for s in strings)
 
-def build(binName: str, outDir: str, libraries: list[dict], sources: list[str], objectDir: str, compileFlags: list[str], linkFlags: list[str]) -> None:
+def build (
+        objectDir: str,
+        binDir: str,
+        binName: str,
+        libraries: list[dict],
+        sources: list[str],
+        compileFlags: list[str],
+        linkFlags: list[str]
+) -> None:
     objects: list[str] = []
     libIncludes: list[str] = []
     libPaths: list[str] = []
@@ -11,14 +20,15 @@ def build(binName: str, outDir: str, libraries: list[dict], sources: list[str], 
 
     for lib in libraries:
         for i in lib["Includes"]: libIncludes.append(f"-I3rd/{i}")
-        for p in lib["Paths"]: libPaths.append(f"-L3rd/{p}")
-        for b in lib["Binaries"]: libBins.append(f"-l:{b}")
+        for b in lib["Binaries"]:
+            path, slash, bin = str(b).rpartition("/")
+            libPaths.append(f"-L3rd/{path}")
+            libBins.append(f"-l:{bin}")
 
     for src in sources:
         obj: str = f"{os.path.basename(src)[:-4]}.o"
         print(f"Compiling {src}...")
-        cmd: str = f"clang++ {_join(compileFlags)} {_join(libIncludes)} -c src/{src} -o {objectDir}/{obj}"
-        os.system(cmd)
+        os.system(f"clang++ {_join(compileFlags)} {_join(libIncludes)} -c src/{src} -o {objectDir}/{obj}")
         objects.append(f"{objectDir}/{obj}")
 
     ext: str
@@ -32,6 +42,10 @@ def build(binName: str, outDir: str, libraries: list[dict], sources: list[str], 
             return
 
     print(f"Linking sources...")
-    cmd:str = f"clang++ {_join(linkFlags)} {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {outDir}/{binName}{ext} -Wl,-rpath,'$ORIGIN'"
-    os.system(cmd)
+    os.system(f"clang++ {_join(linkFlags)} {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} -Wl,-rpath,'$ORIGIN'")
+
+    print(f"Transferring library binaries...")
+    for lib in libraries:
+        for bin in lib["Binaries"]:
+            shutil.copy(f"3rd/{bin}", f"{binDir}/{os.path.basename(bin)}")
     return
