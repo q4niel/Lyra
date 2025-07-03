@@ -13,7 +13,10 @@ if __name__ == "__main__":
     libs: dict = lua.parseFile("bld/cfg/libraries.lua")
 
     for lib in libs["Linux"]:
+        print(f"Installing: {lib["URL"]}...")
         archive = f"{thirdDir}/{lib["URL"].replace("/", "")}"
         library.download(archive, lib["URL"])
         library.extract(archive, thirdDir)
         os.remove(archive)
+
+    print("\n- Done! -")

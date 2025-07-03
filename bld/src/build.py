@@ -21,13 +21,17 @@ if __name__ == "__main__":
 
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
     version: dict = lua.parseFile("bld/cfg/version.lua")
+    libraries: list = lua.parseFile("bld/cfg/libraries.lua")
     sources: list = lua.parseFile("bld/cfg/sources.lua")
 
     clang.build (
         "lyra",
         objDir,
+        libraries["Linux"],
         sources,
         objDir,
         flags["Compilation"],
         flags["Linking"]
     )
+
+    print("\n- Done! -")
