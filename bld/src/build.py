@@ -6,8 +6,9 @@ from util import clang
 if __name__ == "__main__":
     outDir: str = "bld/out"
     buildDir: str = f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}"
+    releaseDir: str = f"{buildDir}/Lyra"
     objDir: str = f"{buildDir}/obj"
-    binDir: str = f"{buildDir}/bin"
+    binDir: str = f"{releaseDir}/bin"
 
     if not os.path.exists(outDir):
         os.mkdir(outDir)
@@ -18,6 +19,7 @@ if __name__ == "__main__":
             break
 
     os.mkdir(buildDir)
+    os.mkdir(releaseDir)
     os.mkdir(objDir)
     os.mkdir(binDir)
 
