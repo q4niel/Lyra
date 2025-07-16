@@ -3,12 +3,12 @@ from datetime import datetime
 from util import lua
 from util import clang
 
+def mkDir(name: str) -> str:
+    os.mkdir(name)
+    return name
+
 if __name__ == "__main__":
     outDir: str = "bld/out"
-    buildDir: str = f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}"
-    releaseDir: str = f"{buildDir}/Lyra"
-    objDir: str = f"{buildDir}/obj"
-    binDir: str = f"{releaseDir}/bin"
 
     if not os.path.exists(outDir):
         os.mkdir(outDir)
@@ -18,10 +18,11 @@ if __name__ == "__main__":
             os.rename(f"{outDir}/{name}", f"{outDir}/{name[7:]}")
             break
 
-    os.mkdir(buildDir)
-    os.mkdir(releaseDir)
-    os.mkdir(objDir)
-    os.mkdir(binDir)
+    buildDir: str = mkDir(f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}")
+    releaseDir: str = mkDir(f"{buildDir}/Lyra")
+    objDir: str = mkDir(f"{buildDir}/obj")
+    binDir: str = mkDir(f"{releaseDir}/bin")
+    licensesDir: str = mkDir(f"{releaseDir}/lic")
 
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
     version: dict = lua.parseFile("bld/cfg/version.lua")
