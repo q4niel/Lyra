@@ -7,6 +7,7 @@ def _join(strings: list[str]) -> str:
 def build (
         objectDir: str,
         binDir: str,
+        licenseDir: str,
         binName: str,
         libraries: list[dict],
         sources: list[str],
@@ -44,8 +45,10 @@ def build (
     print(f"Linking sources...")
     os.system(f"clang++ {_join(linkFlags)} {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} -Wl,-rpath,'$ORIGIN'")
 
-    print(f"Transferring library binaries...")
+    print(f"Transferring library Binaries & Licenses...")
     for lib in libraries:
+        shutil.copy(f"3rd/{lib["License"]["Source"]}", f"{licenseDir}/{lib["License"]["OutName"]}")
+
         for bin in lib["Binaries"]:
             shutil.copy(f"3rd/{bin}", f"{binDir}/{os.path.basename(bin)}")
     return

@@ -22,7 +22,7 @@ if __name__ == "__main__":
     releaseDir: str = mkDir(f"{buildDir}/Lyra")
     objDir: str = mkDir(f"{buildDir}/obj")
     binDir: str = mkDir(f"{releaseDir}/bin")
-    licensesDir: str = mkDir(f"{releaseDir}/lic")
+    licenseDir: str = mkDir(f"{releaseDir}/lic")
 
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
     version: dict = lua.parseFile("bld/cfg/version.lua")
@@ -32,6 +32,7 @@ if __name__ == "__main__":
     clang.build (
         objDir,
         binDir,
+        licenseDir,
         "lyra",
         libraries["Linux"],
         sources,
