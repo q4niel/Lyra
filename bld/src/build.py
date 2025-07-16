@@ -1,4 +1,5 @@
 import os
+import shutil
 from datetime import datetime
 from util import lua
 from util import clang
@@ -25,7 +26,7 @@ if __name__ == "__main__":
     licenseDir: str = mkDir(f"{releaseDir}/lic")
 
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
-    version: dict = lua.parseFile("bld/cfg/version.lua")
+    general: dict = lua.parseFile("bld/cfg/general.lua")
     libraries: list = lua.parseFile("bld/cfg/libraries.lua")
     sources: list = lua.parseFile("bld/cfg/sources.lua")
 
@@ -38,6 +39,12 @@ if __name__ == "__main__":
         sources,
         flags["Compilation"],
         flags["Linking"]
+    )
+
+    print(f"Transferring Lyra License...")
+    shutil.copy (
+        general["License"]["Source"],
+        f"{licenseDir}/{general["License"]["OutName"]}"
     )
 
     print("\n- Done! -")
