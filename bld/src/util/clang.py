@@ -43,7 +43,7 @@ def build (
             return
 
     print(f"Linking sources...")
-    os.system(f"clang++ {_join(linkFlags)} {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} -Wl,-rpath,'$ORIGIN'")
+    os.system(f"clang++ {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} {_join(linkFlags)}")
 
     print(f"Transferring library Binaries & Licenses...")
     for lib in libraries:

@@ -2,5 +2,7 @@ return {
     Compilation = {
         "-std=c++23"
     },
-    Linking = {}
+    Linking = {
+        "-Wl,-rpath,'$ORIGIN'"
+    }
 }
