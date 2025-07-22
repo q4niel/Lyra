@@ -1,6 +1,8 @@
 *
 
 !.gitignore
+!.dockerignore
+!Dockerfile.linux
 !LICENSE
 !README.md
 

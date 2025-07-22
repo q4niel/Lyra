@@ -1,0 +1,6 @@
+FROM archlinux:latest
+RUN pacman -Syu --noconfirm python3 python-pip clang
+RUN pip3 install --break-system-packages lupa requests
+COPY . ./Lyra
+WORKDIR Lyra
+ENTRYPOINT ["python3"]

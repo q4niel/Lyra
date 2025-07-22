@@ -3,7 +3,7 @@ import shutil
 from util import lua
 from util import library
 
-if __name__ == "__main__":
+def main() -> None:
     thirdDir: str = "3rd"
 
     if os.path.exists(thirdDir):
@@ -20,3 +20,5 @@ if __name__ == "__main__":
         os.remove(archive)
 
     print("\n- Done! -")
+
+if __name__ == "__main__": main()

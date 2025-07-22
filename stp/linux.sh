@@ -25,13 +25,6 @@ reqCmd() {
     fi
 }
 
-reqCmd python3
-reqCmd clang++
-
-if echo -e "#include <print>\nint main(int argc, char **argv) { std::println(\"hello world\");  return 0; }" | clang++ -std=c++23 -x c++ - -fsyntax-only &> /dev/null; then
-    success "'clang++' supports C++23."
-else
-    failure "'clang++' does NOT support C++23. Please update your compiler."
-fi
+reqCmd docker
 
 echo -e "[\e[92mSETUP SUCCEEDED\e[0m]"

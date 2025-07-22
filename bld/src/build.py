@@ -1,6 +1,6 @@
 import os
 import shutil
-from datetime import datetime
+import install_libraries
 from util import lua
 from util import clang
 
@@ -9,19 +9,15 @@ def mkDir(name: str) -> str:
     return name
 
 if __name__ == "__main__":
+    install_libraries.main()
+
     outDir: str = "bld/out"
 
     if not os.path.exists(outDir):
         os.mkdir(outDir)
 
-    for name in os.listdir(outDir):
-        if name.startswith("latest_"):
-            os.rename(f"{outDir}/{name}", f"{outDir}/{name[7:]}")
-            break
-
-    buildDir: str = mkDir(f"{outDir}/{datetime.now().strftime("latest_%H_%M_%S_%f")}")
-    releaseDir: str = mkDir(f"{buildDir}/Lyra")
-    objDir: str = mkDir(f"{buildDir}/obj")
+    releaseDir: str = mkDir(f"{outDir}/Lyra")
+    objDir: str = mkDir(f"{outDir}/obj")
     binDir: str = mkDir(f"{releaseDir}/bin")
     licenseDir: str = mkDir(f"{releaseDir}/lic")
 

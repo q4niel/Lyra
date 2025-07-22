@@ -1,0 +1,11 @@
+*
+
+!LICENSE
+
+!bld/cfg/
+!bld/cfg/**/*
+!bld/src/
+!bld/src/**/*
+
+!src/
+!src/**/*
