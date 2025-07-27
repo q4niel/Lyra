@@ -43,4 +43,10 @@ if __name__ == "__main__":
         f"{licenseDir}/{general["License"]["OutName"]}"
     )
 
+    print(f"Transferring Launcher Script...")
+    shutil.copy (
+        f"src/{general["Launcher"]["Linux"]["Source"]}",
+        f"{releaseDir}/{general["Launcher"]["Linux"]["OutName"]}"
+    )
+
     print("\n- Done! -")

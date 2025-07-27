@@ -7,5 +7,11 @@ return {
     License = {
         Source = "LICENSE",
         OutName = "lyra_LICENSE"
+    },
+    Launcher = {
+        Linux = {
+            Source = "launcher/linux.sh",
+            OutName = "Lyra"
+        }
     }
 }

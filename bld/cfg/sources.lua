@@ -1,3 +1,3 @@
 return {
-    "main.cxx"
+    "lyra/main.cxx"
 }
