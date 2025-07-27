@@ -10,9 +10,9 @@ isLinux() {
 runDocker() {
     isLinux
 
-    sudo docker build -f "Dockerfile.linux" -t "lyra-env:latest" .
+    sudo docker build -f $1 -t "lyra-env:latest" .
     sudo docker rm "lyra-env"
-    sudo docker run --name "lyra-env" "lyra-env:latest" $1
+    sudo docker run --name "lyra-env" "lyra-env:latest" $2
 }
 
 copyDocker() {
