@@ -12,7 +12,7 @@ def main() -> None:
 
     libs: dict = lua.parseFile("bld/cfg/libraries.lua")
 
-    for lib in libs["Linux"]:
+    for lib in libs["Linux"]["External"]:
         print(f"Installing: {lib["URL"]}...")
         archive = f"{thirdDir}/{lib["URL"].replace("/", "")}"
         library.download(archive, lib["URL"])

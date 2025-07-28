@@ -9,7 +9,7 @@ def build (
         binDir: str,
         licenseDir: str,
         binName: str,
-        libraries: list[dict],
+        libraries: dict,
         sources: list[str],
         compileFlags: list[str],
         linkFlags: list[str]
@@ -19,12 +19,16 @@ def build (
     libPaths: list[str] = []
     libBins: list[str] = []
 
-    for lib in libraries:
+    def addLibBin(path: str) -> None:
+        dir, slash, bin = str(path).rpartition("/")
+        libPaths.append(f"-L3rd/{dir}")
+        libBins.append(f"-l:{bin}")
+
+    for lib in libraries["External"]:
         for i in lib["Includes"]: libIncludes.append(f"-I3rd/{i}")
-        for b in lib["Binaries"]:
-            path, slash, bin = str(b).rpartition("/")
-            libPaths.append(f"-L3rd/{path}")
-            libBins.append(f"-l:{bin}")
+        for b in lib["Binaries"]: addLibBin(b)
+
+    for lib in libraries["System"]: addLibBin(lib["Binary"])
 
     for src in sources:
         obj: str = f"{os.path.basename(src)[:-4]}.o"
@@ -45,8 +49,19 @@ def build (
     print(f"Linking sources...")
     os.system(f"clang++ {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} {_join(linkFlags)}")
 
-    print(f"Transferring library Binaries & Licenses...")
-    for lib in libraries:
+    print(f"Transferring System Library Binaries & Licenses...")
+    #TODO licenses
+    for lib in libraries["System"]:
+        shutil.copy(lib["Binary"], f"{binDir}/{os.path.basename(lib["Binary"])}")
+
+        if lib["Symlink"]:
+            oldCWD: str = os.getcwd()
+            os.chdir(binDir)
+            os.symlink(os.path.basename(lib["Binary"]), lib["Symlink"])
+            os.chdir(oldCWD)
+
+    print(f"Transferring External Library Binaries & Licenses...")
+    for lib in libraries["External"]:
         shutil.copy(f"3rd/{lib["License"]["Source"]}", f"{licenseDir}/{lib["License"]["OutName"]}")
 
         for bin in lib["Binaries"]:

@@ -1,6 +1,6 @@
 #include <print>
 
-int main(int argc, char **argv) {
+int main() {
     std::println("hello world");
     return 0;
 }
