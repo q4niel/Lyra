@@ -1,5 +1,6 @@
 import os
 import shutil
+from . import library
 
 def _join(strings: list[str]) -> str:
     return " ".join(f"{s}" for s in strings)
@@ -18,6 +19,10 @@ def build (
     libIncludes: list[str] = []
     libPaths: list[str] = []
     libBins: list[str] = []
+    sysLibLics: dict[str, library.SystemLicenseBuilder] = {
+        lic["Name"]: library.SystemLicenseBuilder(lic["Name"], licenseDir)
+        for lic in libraries["System"]["Licenses"]
+    }
 
     def addLibBin(path: str) -> None:
         dir, slash, bin = str(path).rpartition("/")
@@ -28,7 +33,13 @@ def build (
         for i in lib["Includes"]: libIncludes.append(f"-I3rd/{i}")
         for b in lib["Binaries"]: addLibBin(b)
 
-    for lib in libraries["System"]: addLibBin(lib["Binary"])
+    for lib in libraries["System"]["Binaries"]:
+        addLibBin(bin:= lib["Binary"])
+        for lic in lib["Licenses"]:
+            if lic in sysLibLics:
+                sysLibLics[lic].addBinary(bin)
+            else:
+                print(f"License '{lic}' for '{bin}' is undefined.")
 
     for src in sources:
         obj: str = f"{os.path.basename(src)[:-4]}.o"
@@ -49,9 +60,8 @@ def build (
     print(f"Linking sources...")
     os.system(f"clang++ {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} {_join(linkFlags)}")
 
-    print(f"Transferring System Library Binaries & Licenses...")
-    #TODO licenses
-    for lib in libraries["System"]:
+    print(f"Transferring System Library Binaries...")
+    for lib in libraries["System"]["Binaries"]:
         shutil.copy(lib["Binary"], f"{binDir}/{os.path.basename(lib["Binary"])}")
 
         if lib["Symlink"]:
@@ -59,6 +69,11 @@ def build (
             os.chdir(binDir)
             os.symlink(os.path.basename(lib["Binary"]), lib["Symlink"])
             os.chdir(oldCWD)
+
+    print(f"Building System Library Licenses...")
+    for name, lic in sysLibLics.items():
+        lic.addContent(libraries["System"]["LicenseBinaryNotice"])
+        lic.build()
 
     print(f"Transferring External Library Binaries & Licenses...")
     for lib in libraries["External"]:
