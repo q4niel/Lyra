@@ -1,5 +1,6 @@
 import os
 import shutil
+import requests
 from . import library
 
 def _join(strings: list[str]) -> str:
@@ -19,10 +20,12 @@ def build (
     libIncludes: list[str] = []
     libPaths: list[str] = []
     libBins: list[str] = []
-    sysLibLics: dict[str, library.SystemLicenseBuilder] = {
-        lic["Name"]: library.SystemLicenseBuilder(lic["Name"], licenseDir)
-        for lic in libraries["System"]["Licenses"]
-    }
+    sysLibLics: dict[str, library.SystemLicenseBuilder] = {}
+
+    for lic in libraries["System"]["Licenses"]:
+        sysLibLics[lic["Name"]] = library.SystemLicenseBuilder(lic["Name"], licenseDir)
+        sysLibLics[lic["Name"]].addNotice(libraries["System"]["LicenseBinaryNotice"])
+        sysLibLics[lic["Name"]].addLicense(requests.get(lic["License"]).text)
 
     def addLibBin(path: str) -> None:
         dir, slash, bin = str(path).rpartition("/")
@@ -71,9 +74,7 @@ def build (
             os.chdir(oldCWD)
 
     print(f"Building System Library Licenses...")
-    for name, lic in sysLibLics.items():
-        lic.addContent(libraries["System"]["LicenseBinaryNotice"])
-        lic.build()
+    for name, lic in sysLibLics.items(): lic.build()
 
     print(f"Transferring External Library Binaries & Licenses...")
     for lib in libraries["External"]:
