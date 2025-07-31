@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import install_libraries
 from util import lua
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         objDir,
         binDir,
         licenseDir,
-        "lyra",
+        "lyra_d" if "-DDEBUG" in sys.argv else "lyra",
         libraries["Linux"],
         sources,
         flags["Compilation"],

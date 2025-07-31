@@ -2,9 +2,7 @@ return {
     DebugOnly = {
         Linux = {},
         Windows = {},
-        Universal = {
-            "dprint/dprint.cxx"
-        }
+        Universal = {}
     },
     Release = {
         Linux = {
