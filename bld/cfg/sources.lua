@@ -1,9 +1,9 @@
 return {
     Linux = {
-        "lyra/start.S"
+        "entry/linux_x86-64_start.s"
     },
     Windows = {},
     Universal = {
-        "lyra/main.cxx"
+        "entry/main.cxx"
     }
 }
