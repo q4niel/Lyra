@@ -24,7 +24,7 @@ if __name__ == "__main__":
     flags: dict = lua.parseFile("bld/cfg/flags.lua")
     general: dict = lua.parseFile("bld/cfg/general.lua")
     libraries: dict = lua.parseFile("bld/cfg/libraries.lua")
-    sources: list = lua.parseFile("bld/cfg/sources.lua")
+    sources: dict = lua.parseFile("bld/cfg/sources.lua")
 
     clang.build (
         objDir,

@@ -1,4 +1,9 @@
 return {
-    "lyra/start.S",
-    "lyra/main.cxx"
+    Linux = {
+        "lyra/start.S"
+    },
+    Windows = {},
+    Universal = {
+        "lyra/main.cxx"
+    }
 }

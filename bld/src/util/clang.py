@@ -12,7 +12,7 @@ def build (
         licenseDir: str,
         binName: str,
         libraries: dict,
-        sources: list[str],
+        sources: dict,
         compileFlags: list[str],
         linkFlags: list[str]
 ) -> None:
@@ -44,19 +44,25 @@ def build (
             else:
                 print(f"License '{lic}' for '{bin}' is undefined.")
 
-    for src in sources:
+    def compileSource(src: str) -> None:
         obj: str = f"{os.path.basename(src)[:-4]}.o"
         print(f"Compiling {src}...")
         os.system(f"clang++ {_join(compileFlags)} {_join(libIncludes)} -c src/{src} -o {objectDir}/{obj}")
         objects.append(f"{objectDir}/{obj}")
 
     ext: str
+    for src in sources["Universal"]:
+        compileSource(src)
 
     match os.name:
         case "nt":
             ext = ".exe"
+            for src in sources["Windows"]:
+                compileSource(src)
         case "posix":
             ext = ""
+            for src in sources["Linux"]:
+                compileSource(src)
         case _:
             return
 
