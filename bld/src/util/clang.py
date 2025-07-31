@@ -1,6 +1,8 @@
 import os
+import sys
 import shutil
 import requests
+from typing import Final
 from . import library
 
 def _join(strings: list[str]) -> str:
@@ -16,6 +18,8 @@ def build (
         compileFlags: list[str],
         linkFlags: list[str]
 ) -> None:
+    debugMode_: Final[bool] = "-DDEBUG" in sys.argv
+
     objects: list[str] = []
     libIncludes: list[str] = []
     libPaths: list[str] = []
@@ -47,27 +51,30 @@ def build (
     def compileSource(src: str) -> None:
         obj: str = f"{os.path.basename(src).rsplit(".", 1)[0]}.o"
         print(f"Compiling {src}...")
-        os.system(f"clang++ {_join(compileFlags)} {_join(libIncludes)} -c src/{src} -o {objectDir}/{obj}")
+        os.system(f"clang++ -Qunused-arguments {"-DDEBUG" if debugMode_ else ""} {_join(compileFlags)} {_join(libIncludes)} -c src/{src} -o {objectDir}/{obj}")
         objects.append(f"{objectDir}/{obj}")
 
     ext: str
-    for src in sources["Universal"]:
-        compileSource(src)
+    for src in sources["Release"]["Universal"]: compileSource(src)
+    if debugMode_:
+        for src in sources["DebugOnly"]["Universal"]: compileSource(src)
 
     match os.name:
         case "nt":
             ext = ".exe"
-            for src in sources["Windows"]:
-                compileSource(src)
+            for src in sources["Release"]["Windows"]: compileSource(src)
+            if debugMode_:
+                for src in sources["DebugOnly"]["Windows"]: compileSource(src)
         case "posix":
             ext = ""
-            for src in sources["Linux"]:
-                compileSource(src)
+            for src in sources["Release"]["Linux"]: compileSource(src)
+            if debugMode_:
+                for src in sources["DebugOnly"]["Linux"]: compileSource(src)
         case _:
             return
 
     print(f"Linking sources...")
-    os.system(f"clang++ {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} {_join(linkFlags)}")
+    os.system(f"clang++ {"-DDEBUG" if debugMode_ else ""} {_join(libPaths)} {_join(libBins)} {_join(objects)} -o {binDir}/{binName}{ext} {_join(linkFlags)}")
 
     print(f"Transferring System Library Binaries...")
     for lib in libraries["System"]["Binaries"]:

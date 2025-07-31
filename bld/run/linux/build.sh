@@ -3,7 +3,7 @@ cd "$(dirname $(dirname $(dirname $(dirname $(realpath "$0")))))"
 source "bld/run/linux/util.sh"
 time=$(date +"%Y_%m_%d-%H_%M_%S")
 
-runDocker "bld/Dockerfile.linux" bld/src/build.py
+runDocker "bld/Dockerfile.linux" bld/src/build.py "$@"
 if [ ! -d bld/out ]; then
     mkdir bld/out
 fi
