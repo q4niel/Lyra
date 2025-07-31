@@ -1,8 +1,21 @@
 *
 
 !.gitignore
+!.dockerignore
+!Dockerfile.linux
 !LICENSE
 !README.md
+
+!bld/
+!bld/cfg/
+!bld/cfg/**/*
+!bld/run/
+!bld/run/**/*
+!bld/src/
+!bld/src/**/*
+
+!src/
+!src/**/*
 
 !stp/
 !stp/**/*
