@@ -1,7 +1,6 @@
 #include "../dprint/dprint.hxx"
 
 int main(int argc, char **argv) {
-    print("hello", " ", "world");
-    printSpace();
+    println("hello world");
     return 0;
 }
