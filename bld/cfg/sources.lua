@@ -12,7 +12,8 @@ return {
         },
         Windows = {},
         Universal = {
-            "entry/main.cxx"
+            "entry/main.cxx",
+            "engine/engine.cxx"
         }
     }
 }
