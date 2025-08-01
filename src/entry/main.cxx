@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "../dprint/dprint.hxx"
 #include "../engine/engine.hxx"
 
