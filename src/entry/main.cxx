@@ -1,6 +1,6 @@
-#include <print>
+#include "../dprint/dprint.hxx"
 
 int main(int argc, char **argv) {
-    std::println("hello world");
+    println("hello world");
     return 0;
 }
