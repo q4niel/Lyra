@@ -1,35 +1,37 @@
-#include "engine.hxx"
 #include <raylib.h>
+#include "engine.hxx"
 
-bool eng::init() {
-    #ifndef DEBUG
-        SetTraceLogLevel(LOG_NONE);
-    #endif
+namespace lyra {
+    bool Engine::init() {
+        #ifndef DEBUG
+            SetTraceLogLevel(LOG_NONE);
+        #endif
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(800, 600, "My Window");
+        SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+        InitWindow(800, 600, "My Window");
 
-    if (!IsWindowReady()) return false;
+        if (!IsWindowReady()) return false;
 
-    #ifndef DEBUG
-        SetExitKey(KEY_NULL);
-    #endif
+        #ifndef DEBUG
+            SetExitKey(KEY_NULL);
+        #endif
 
-    SetTargetFPS(60);
-    return true;
-}
+        SetTargetFPS(60);
+        return true;
+    }
 
-bool eng::process() {
-    if (WindowShouldClose()) return false;
+    bool Engine::shutdown() {
+        CloseWindow();
+        return true;
+    }
 
-    BeginDrawing();
-    ClearBackground(GRAY);
-    EndDrawing();
+    bool Engine::process() {
+        if (WindowShouldClose()) return false;
 
-    return true;
-}
+        BeginDrawing();
+        ClearBackground(GRAY);
+        EndDrawing();
 
-bool eng::shutdown() {
-    CloseWindow();
-    return true;
+        return true;
+    }
 }

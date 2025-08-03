@@ -1,7 +1,12 @@
 #pragma once
 
-namespace eng {
-    bool init();
-    bool process();
-    bool shutdown();
+namespace lyra {
+    class Engine {
+    public:
+        Engine() = delete;
+
+        static bool init();
+        static bool shutdown();
+        static bool process();
+    };
 }

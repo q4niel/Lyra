@@ -3,18 +3,19 @@
 #include "../engine/engine.hxx"
 
 int main(int argc, char **argv) {
-    if (!eng::init()) {
+    if (!lyra::Engine::init()) {
         println("Error: Engine initialization failed");
         return EXIT_FAILURE;
     }
     println("Engine initialization succeeded");
 
-    while (eng::process()) {}
+    while (lyra::Engine::process()) {}
 
-    if (!eng::shutdown()) {
+    if (!lyra::Engine::shutdown()) {
         println("Error: Engine shutdown failed");
         return EXIT_FAILURE;
     }
+
     println("Engine shutdown succeeded");
     return EXIT_SUCCESS;
 }
