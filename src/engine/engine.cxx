@@ -5,13 +5,6 @@
 namespace lyra {
     static Engine *instPtr = nullptr;
 
-    std::expected<Engine, std::string> Engine::create() {
-        if (lyra::instPtr != nullptr) {
-            return std::unexpected("Failed to create Engine: another instance is already active.");
-        }
-        return std::expected<lyra::Engine, std::string>{std::in_place, InitTag{}};
-    }
-
     std::optional<Engine*> Engine::instance() {
         if (lyra::instPtr == nullptr) {
             return std::nullopt;
@@ -19,39 +12,46 @@ namespace lyra {
         return lyra::instPtr;
     }
 
-    std::expected<void, std::string> Engine::init() {
+    EXPECT_TYPE(Engine) Engine::create() {
+        if (lyra::instPtr != nullptr) {
+            return EXPECT_TYPE_ERROR("Failed to create Engine: another instance is already active.");
+        }
+        return EXPECT_TYPE(Engine){std::in_place, InitTag{}};
+    }
+
+    EXPECT_VOID Engine::init() {
         SetTraceLogLevel(LOG_NONE);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         InitWindow(800, 600, "My Window");
 
-        if (!IsWindowReady()) return std::unexpected("Failed to initialize Engine.");
+        if (!IsWindowReady()) return EXPECT_VOID_ERROR("Failed to initialize Engine.");
 
         #ifndef DEBUG
             SetExitKey(KEY_NULL);
         #endif
 
         SetTargetFPS(60);
-        isInitialized = true;
-        return {};
+        _isInitialized = true;
+        return EXPECT_VOID_SUCCESS;
     }
 
-    std::expected<void, std::string> Engine::process() {
-        if (WindowShouldClose()) return std::unexpected("Engine Process: closed by window.");
+    EXPECT_VOID Engine::process() {
+        if (WindowShouldClose()) return EXPECT_VOID_ERROR("Engine Process: closed by window.");
 
         BeginDrawing();
         ClearBackground(GRAY);
         EndDrawing();
 
-        return {};
+        return EXPECT_VOID_SUCCESS;
     }
 
-    void Engine::clean() {
-        if (!isInitialized) return;
+    void Engine::_clean() {
+        if (!_isInitialized) return;
         CloseWindow();
     }
 
     Engine::Engine(InitTag) :
-        isInitialized(false)
+        _isInitialized(false)
     {
         println("Engine Constructed");
         lyra::instPtr = this;
@@ -59,7 +59,7 @@ namespace lyra {
 
     Engine::~Engine() {
         println("Engine Destructed");
-        clean();
+        _clean();
         lyra::instPtr = nullptr;
     }
 }
