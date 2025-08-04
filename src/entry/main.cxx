@@ -1,21 +1,34 @@
 #include <cstdlib>
+#include <thread>
+#include <chrono>
 #include "../dprint/dprint.hxx"
 #include "../engine/engine.hxx"
 
 int main(int argc, char **argv) {
-    if (!lyra::Engine::init()) {
-        println("Error: Engine initialization failed");
-        return EXIT_FAILURE;
-    }
-    println("Engine initialization succeeded");
-
-    while (lyra::Engine::process()) {}
-
-    if (!lyra::Engine::shutdown()) {
-        println("Error: Engine shutdown failed");
+    auto engineCB = lyra::Engine::create();
+    if (!engineCB) {
+        println(engineCB.error());
         return EXIT_FAILURE;
     }
 
-    println("Engine shutdown succeeded");
+    auto initCB = (*engineCB).init();
+    if (!initCB) {
+        println(initCB.error());
+        return EXIT_FAILURE;
+    }
+
+    int count = 0;
+    while (true) {
+        auto procCB = (*engineCB).process();
+        if (!procCB) {
+            println(procCB.error());
+            break;
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        count++;
+        println(count);
+    }
+
     return EXIT_SUCCESS;
 }
