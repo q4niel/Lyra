@@ -37,7 +37,7 @@ namespace lyra {
         EXPECT_VOID process();
 
         template<DerivedFromElement2D T, typename... Args>
-        void addElement(Args&&... args);
+        const T *const instantiateElement(Args&&... args);
 
         Engine(const Engine&) = delete;            // Engine e2 = e1; (copy construction)
         Engine& operator=(const Engine&) = delete; // e2 = e1; (copy assignment)
@@ -49,6 +49,7 @@ namespace lyra {
         std::vector<Element2D*> _elements;
 
         Engine();
+        float _clampf(float value, float min, float max);
         void _drawElements();
         void _clean();
     };

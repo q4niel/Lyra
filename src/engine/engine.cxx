@@ -60,15 +60,28 @@ namespace lyra {
         return EXPECT_VOID_SUCCESS;
     }
 
+    float Engine::_clampf(float value, float min, float max) {
+        return (value < min) ? min : (value > max) ? max : value;
+    }
+
     void Engine::_drawElements() {
         for (Element2D *e : _elements) {
             if (!dynamic_cast<Image2D*>(e)) continue;
+            const Texture2D &tex = ((Image2D*)e)->getTexture();
 
             DrawTextureV (
-                ((Image2D*)e)->getTexture(),
+                tex,
                 {
-                    e->transform.position.getX(),
-                    e->transform.position.getY()
+                    _clampf (
+                         e->transform.position.getX(),
+                         0,
+                         GetScreenWidth() - tex.width
+                    ),
+                     _clampf (
+                         e->transform.position.getY(),
+                         0,
+                         GetScreenHeight() - tex.height
+                    )
                 },
                 WHITE
             );

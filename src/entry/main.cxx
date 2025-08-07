@@ -17,17 +17,12 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    int count = 0;
     while (true) {
         auto procCB = engineCB->process();
         if (!procCB) {
             println(procCB.error());
             break;
         }
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        count++;
-        println(count);
     }
 
     return EXIT_SUCCESS;
