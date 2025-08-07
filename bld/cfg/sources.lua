@@ -13,7 +13,10 @@ return {
         Windows = {},
         Universal = {
             "entry/main.cxx",
-            "engine/engine.cxx"
+            "engine/engine.cxx",
+            "engine/gui/image2d.cxx",
+            "engine/gui/base/element2d.cxx",
+            "engine/gui/base/vector2d.cxx"
         }
     }
 }

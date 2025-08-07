@@ -1,5 +1,8 @@
 #pragma once
 #include <optional>
+#include <vector>
+#include <type_traits>
+#include "gui/base/element2d.hxx"
 
 #ifdef DEBUG
     #include <expected>
@@ -18,26 +21,37 @@
 #endif
 
 namespace lyra {
+    template<typename T>
+    concept DerivedFromElement2D = std::derived_from<T, Element2D>;
+
     class Engine {
-    private:
-        struct InitTag { explicit InitTag() = default; };
-        bool _isInitialized;
-        Engine();
-        void _clean();
+    private: struct InitTag { explicit InitTag() = default; };
 
     public:
+        Engine(struct InitTag);
+        ~Engine();
+
         static std::optional<Engine*> instance();
         static EXPECT_TYPE(Engine) create();
-
         EXPECT_VOID init();
         EXPECT_VOID process();
 
-        Engine(struct InitTag);
-        ~Engine();
+        template<DerivedFromElement2D T, typename... Args>
+        void addElement(Args&&... args);
 
         Engine(const Engine&) = delete;            // Engine e2 = e1; (copy construction)
         Engine& operator=(const Engine&) = delete; // e2 = e1; (copy assignment)
         Engine(Engine&&) = delete;                 // Engine e2 = std::move(e1); (move construction)
         Engine& operator=(Engine&&) = delete;      // e2 = std::move(e1); (move assignment)
+
+    private:
+        bool _isInitialized;
+        std::vector<Element2D*> _elements;
+
+        Engine();
+        void _drawElements();
+        void _clean();
     };
 }
+
+#include "engine.txx"

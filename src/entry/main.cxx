@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    auto initCB = (*engineCB).init();
+    auto initCB = engineCB->init();
     if (!initCB) {
         println(initCB.error());
         return EXIT_FAILURE;
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 
     int count = 0;
     while (true) {
-        auto procCB = (*engineCB).process();
+        auto procCB = engineCB->process();
         if (!procCB) {
             println(procCB.error());
             break;

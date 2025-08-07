@@ -1,9 +1,23 @@
 #include <raylib.h>
 #include "engine.hxx"
+#include "gui/image2d.hxx"
 #include "../dprint/dprint.hxx"
 
 namespace lyra {
     static Engine *instPtr = nullptr;
+
+    Engine::Engine(InitTag) :
+        _isInitialized(false)
+    {
+        println("Engine Constructed");
+        lyra::instPtr = this;
+    }
+
+    Engine::~Engine() {
+        println("Engine Destructed");
+        _clean();
+        lyra::instPtr = nullptr;
+    }
 
     std::optional<Engine*> Engine::instance() {
         if (lyra::instPtr == nullptr) {
@@ -40,26 +54,30 @@ namespace lyra {
 
         BeginDrawing();
         ClearBackground(GRAY);
+        _drawElements();
         EndDrawing();
 
         return EXPECT_VOID_SUCCESS;
     }
 
+    void Engine::_drawElements() {
+        for (Element2D *e : _elements) {
+            if (!dynamic_cast<Image2D*>(e)) continue;
+
+            DrawTextureV (
+                ((Image2D*)e)->getTexture(),
+                {
+                    e->transform.position.getX(),
+                    e->transform.position.getY()
+                },
+                WHITE
+            );
+        }
+    }
+
     void Engine::_clean() {
         if (!_isInitialized) return;
+        for (Element2D *e : _elements) delete e;
         CloseWindow();
-    }
-
-    Engine::Engine(InitTag) :
-        _isInitialized(false)
-    {
-        println("Engine Constructed");
-        lyra::instPtr = this;
-    }
-
-    Engine::~Engine() {
-        println("Engine Destructed");
-        _clean();
-        lyra::instPtr = nullptr;
     }
 }
