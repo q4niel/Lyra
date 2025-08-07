@@ -1,3 +1,5 @@
+#pragma once
+
 #define __PRINT_ARGS__(...) \
 ((std::cout << std::forward<Args>(args) __VA_OPT__(<< __VA_ARGS__) ), ...)
 
